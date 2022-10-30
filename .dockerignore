@@ -1,3 +1,15 @@
+.git/
+.gitignore
+.gitmodules
+.build-*.yml
+local/
+tmp/
+**/__pycache__
+docker-compose.yaml
+docker-compose.yml
+.vscode/
+
+# ref: https://github.com/github/gitignore/blob/master/Python.gitignore
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -11,7 +23,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
+# downloads/
 eggs/
 .eggs/
 lib/

@@ -1,0 +1,55 @@
+version: "3.9"  # optional since v1.27.0
+
+services:
+  postgres:
+    image: docker.io/amd64/postgres:14-alpine
+    restart: always
+    hostname: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "55432:5432"
+
+  jaeger:
+    image: quay.io/jaegertracing/all-in-one:latest
+    environment:
+      LOG_LEVEL: debug
+      COLLECTOR_OTLP_ENABLED: 'true'
+    ports:
+      - "58686:16686"
+
+  web:
+    build:
+      context: .
+      # args:
+      #   IMAGE_VERSION: ${TAG}-${BUILD_ID}
+    image: image.local/testruction/mvc-flask-dash
+    command: tail -f /dev/null
+    ports:
+      - "55000:5000"
+    environment:
+      # Flask
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5000
+      # OTLP GRPC
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+      OTEL_EXPORTER_OTLP_INSECURE: "true"
+      # Postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    links:
+      - jaeger
+      - postgres
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./MANIFEST.in:/app/MANIFEST.in
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./README.md:/app/README.md
+      - ./setup.cfg:/app/setup.cfg
+      - ./VERSION:/app/VERSION
+
