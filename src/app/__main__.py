@@ -5,11 +5,11 @@ from flask_assets import Environment
 
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
-import mvc_flask_dash.config as config
-from mvc_flask_dash.database import create_db, get_migrate
-from mvc_flask_dash.controllers.postgres import postgres_controllers
-from mvc_flask_dash.views.index import index_views
-from mvc_flask_dash.views.dashboards.postgres import init_postgres_dashboard
+import app.config as config
+from app.database import create_db, get_migrate
+from app.controllers.postgres import postgres_controllers
+from app.views.index import index_views
+from app.views.dashboards.postgres import init_postgres_dashboard
 # New views must be imported and added to this list
 views = [index_views,
          postgres_controllers]
@@ -50,7 +50,7 @@ def create_app():
     
     # Enable flask telemetry
     from opentelemetry import trace
-    from mvc_flask_dash.utils import get_openid_user
+    from app.utils import get_openid_user
     def request_hook(span: trace.get_current_span(), environ: app.wsgi_app):
         if span and span.is_recording():
             span.set_attribute("enduser.id", get_openid_user())

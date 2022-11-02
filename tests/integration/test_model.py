@@ -11,13 +11,13 @@ dataset = pkg_resources.resource_filename(__name__, 'fakenames.csv')
 
 import pytest
 
-from mvc_flask_dash.models.postgres import Fakenames, Base, db
+from app.models.postgres import Fakenames
 
 
 @pytest.mark.usefixtures("app_ctx")
-def test_model_populate(app) -> None:
-    db = SQLAlchemy(app, model_class=Fakenames)
-    db.create_all()
+def test_populate(app, db, tables) -> None:
+    # db = SQLAlchemy(app, model_class=Fakenames)
+    # db.create_all()
     import itertools
     def lower_first(iterator):
         return itertools.chain([next(iterator).lower()], iterator)
@@ -30,16 +30,19 @@ def test_model_populate(app) -> None:
         for row in reader:
             db.session.add(Fakenames(**row))
         db.session.commit()
-  
-@pytest.mark.usefixtures("app_ctx")          
-def test_model_read_all(tables):
+    
+    response = db.session.query(Fakenames).all()
+    logger.info(len(response))
+    assert len(response) == 1000
+
+@pytest.mark.usefixtures("app_ctx")
+def test_read_all(app, db, tables):
     response =  Fakenames.read_all()
     logger.info(response)
     assert len(response) == 1000
 
-# def test_model_read(flask_app):
-#     flask_app.app_context().push()
-    
+# @pytest.mark.usefixtures("app_ctx")
+# def test_read(flask_app):
 #     response = Fakenames.read(guid='ee8d5509-dbce-4ae1-98c8-ba8e00ca8180')
 #     logger.info(response)
 #     assert response

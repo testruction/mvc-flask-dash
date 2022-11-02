@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from mvc_flask_dash.database import db
+from app.database import db
 
 from sqlalchemy.ext.declarative import declarative_base
-from mvc_flask_dash.utils import get_openid_user
+from app.utils import get_openid_user
 
 Base = declarative_base()
 

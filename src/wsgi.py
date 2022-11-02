@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from mvc_flask_dash.app import create_app
+from app import create_app
 
 app = create_app()
 

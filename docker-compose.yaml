@@ -6,11 +6,11 @@ services:
     restart: always
     hostname: postgres
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
     ports:
-      - "55432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
 
   jaeger:
     image: quay.io/jaegertracing/all-in-one:latest
@@ -18,7 +18,8 @@ services:
       LOG_LEVEL: debug
       COLLECTOR_OTLP_ENABLED: 'true'
     ports:
-      - "58686:16686"
+      - "${JARGER_WEBUI_PORT:-16686}:16686"
+      - "${OTLP_EXPORTER_PORT:-4317}:4317"
 
   web:
     build:
@@ -38,9 +39,9 @@ services:
       OTEL_EXPORTER_OTLP_INSECURE: "true"
       # Postgres
       POSTGRES_HOST: postgres
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
     links:
       - jaeger
       - postgres
@@ -52,4 +53,3 @@ services:
       - ./README.md:/app/README.md
       - ./setup.cfg:/app/setup.cfg
       - ./VERSION:/app/VERSION
-

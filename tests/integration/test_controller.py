@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 import pkg_resources
 dataset = pkg_resources.resource_filename(__name__, 'fakenames.csv')
 
-from mvc_flask_dash.controllers.postgres import PostgresApis
+from app.controllers.postgres import PostgresApis
            
 def test_controller_get_all(app):
     app.app_context().push()

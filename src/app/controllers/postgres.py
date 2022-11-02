@@ -3,7 +3,7 @@ import pkg_resources, pathlib
 from flask import Blueprint, render_template
 from flask.json import jsonify
 from flasgger import swag_from
-from mvc_flask_dash.utils import get_openid_user
+from app.utils import get_openid_user
 
 TEMPLATE = pkg_resources.resource_filename(__name__, '../views/templates/postgres.html.j2')
 
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 from flask_restful import Resource
 
-from mvc_flask_dash.models.postgres import Fakenames
+from app.models.postgres import Fakenames
 
 class PostgresApis(Resource):
     @staticmethod
