@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from app.database import db
+from project.database import db
 from sqlalchemy import Column, Integer, String, DateTime, Numeric, SmallInteger
 from sqlalchemy.ext.declarative import declarative_base
-from app.utils import get_openid_user
+from project.utils import get_openid_user
 
 Base = declarative_base()
 

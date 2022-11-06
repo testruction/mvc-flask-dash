@@ -13,14 +13,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from app.config import DevelopmentConfig
+from project.config import DevelopmentConfig
 
 import logging
 logger = logging.getLogger(__name__)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 logger.setLevel('DEBUG')
 
-from app.models.postgres import Fakenames, Base
+from project.models.postgres import Fakenames, Base
 
 import pkg_resources
 dataset = pkg_resources.resource_filename(__name__,

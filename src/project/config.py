@@ -32,10 +32,10 @@ parser.add_argument('--database',
 args, unknown = parser.parse_known_args()
 
 # Initialize logging
-from app.logging import init_logger
+from project.logging import init_logger
 init_logger(args)
 # Initialize telemetry
-from app.telemetry import init_tracer
+from project.telemetry import init_tracer
 init_tracer(args)
 
 from sqlalchemy.engine import URL

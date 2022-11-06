@@ -12,7 +12,7 @@ from opentelemetry.instrumentation.botocore import BotocoreInstrumentor
 
 import psycopg2
 from opentelemetry.instrumentation.dbapi import trace_integration
-from app.utils import get_openid_user
+from project.utils import get_openid_user
 
 
 def init_tracer(args):
