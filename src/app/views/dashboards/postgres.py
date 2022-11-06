@@ -5,7 +5,7 @@ import plotly.express as px
 
 from pandas import DataFrame
 
-from mvc_flask_dash.controllers.postgres import PostgresApis
+from app.controllers.postgres import PostgresApis
 
 layout = html.Div([
     html.Div('Fakenames (Table)'), html.Br(),

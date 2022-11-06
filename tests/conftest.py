@@ -4,93 +4,87 @@ import sys
 sys.path.append('.')
 sys.path.append('./src/')
 
-import typing
-import sqlalchemy
+import typing as t
 
 import pytest
 from flask import Flask
 from flask.ctx import AppContext
 from flask_sqlalchemy import SQLAlchemy
 
-from mvc_flask_dash.models.postgres import db, Base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from app.config import DevelopmentConfig
+
+import logging
+logger = logging.getLogger(__name__)
+logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
+logger.setLevel('DEBUG')
+
+from app.models.postgres import Fakenames, Base
+
+import pkg_resources
+dataset = pkg_resources.resource_filename(__name__,
+                                          'integration/fakenames.csv')
+
+
+# def pytest_sessionstart(session):
+#     engine = create_engine(DevelopmentConfig.SQLALCHEMY_DATABASE_URI)
+#     Base.metadata.create_all(engine)
+
+#     def lower_first(iterator):
+#         import itertools
+#         return itertools.chain([next(iterator).lower()], iterator)
+
+#     import csv
+#     from contextlib import closing
+#     with Session(bind=engine) as session:
+#         with closing(open(dataset, encoding='utf-8-sig')) as f:
+#             reader = csv.DictReader(lower_first(f))
+
+#             for row in reader:
+#                 session.add(Fakenames(**row))
+#         session.commit()
+#         session.close()
 
 @pytest.fixture
 def app(request: pytest.FixtureRequest) -> Flask:
     app = Flask(request.module.__name__)
-    import mvc_flask_dash.config as config
-    app.config.from_object(config.DevelopmentConfig)
+    app.config.from_object(DevelopmentConfig)
     return app
 
 
 @pytest.fixture
-def app_ctx(app: Flask) -> typing.Generator[AppContext, None, None]:
+def app_ctx(app: Flask) -> t.Generator[AppContext, None, None]:
     with app.app_context() as ctx:
         yield ctx
 
 
 @pytest.fixture
 def db(app: Flask) -> SQLAlchemy:
-    return SQLAlchemy(app)
+    return SQLAlchemy(app, model_class=Fakenames)
 
 
 @pytest.fixture
-def tables(app: Flask, db: SQLAlchemy) -> typing.Any:    
-    connection = db.engine.connect()
-    Base.metadata.bind = connection
+@pytest.mark.usefixtures("app_ctx")
+def tables(app: Flask, db: SQLAlchemy) -> t.Any:    
+    Base.metadata.bind = db.engine.connect()
+    Base.metadata.create_all(db.engine)
+    # db.create_all()
 
-    with app.app_context():
-        Base.metadata.create_all()
+    import itertools
+    def lower_first(iterator):
+        return itertools.chain([next(iterator).lower()], iterator)
 
-    yield
+    import csv
+    from contextlib import closing
+    with closing(open(dataset, encoding='utf-8-sig')) as f:
+        reader = csv.DictReader(lower_first(f))
+        
+        for row in reader:
+            db.session.add(Fakenames(**row))
+        db.session.commit()
 
-    with app.app_context():
-        Base.metadata.drop_all()
+    yield Fakenames
 
-@pytest.fixture
-def dbsession(db, tables):
-    from sqlalchemy.orm import Session
-    """Returns an sqlalchemy session, and after the test tears down everything properly."""
-    connection = db.engine.connect()
-    # begin the nested transaction
-    transaction = connection.begin()
-    # use the connection with the already started transaction
-    session = Session(bind=connection)
-
-    yield session
-
-    session.close()
-    # roll back the broader transaction
-    transaction.rollback()
-    # put back the connection to the connection pool
-    connection.close()
-
-# @pytest.fixture(scope='session')
-# def app():
-#     from flask import Flask
-#     app = Flask(__name__)
-    
-#     from mvc_flask_dash.config import DevelopmentConfig
-#     app.config.from_object(DevelopmentConfig)
-    
-#     from flask_sqlalchemy import SQLAlchemy
-#     db = SQLAlchemy(app) # Database Initialization
-    
-#     app.app_context().push()
-    
-#     yield app
-
-    
-# @pytest.fixture(scope='function')
-# def dbsession(app):
-#     db.init_app(app)
-    
-#     connection = db.engine.connect()
-#     transaction = connection.begin()
-    
-#     Base.metadata.bind = connection
-#     Base.metadata.create_all()
-    
-#     yield db.session
-    
-#     transaction.close()
-#     Base.metadata.drop_all()
+    Base.metadata.drop_all()
+    # db.drop_all()

@@ -32,13 +32,14 @@ parser.add_argument('--database',
 args, unknown = parser.parse_known_args()
 
 # Initialize logging
-from mvc_flask_dash.logging import init_logger
+from app.logging import init_logger
 init_logger(args)
 # Initialize telemetry
-from mvc_flask_dash.telemetry import init_tracer
+from app.telemetry import init_tracer
 init_tracer(args)
 
 from sqlalchemy.engine import URL
+
 
 class Config(object):
     DEBUG = False
@@ -46,12 +47,12 @@ class Config(object):
     CSRF_NABLED = True
     SITE_NAME = 'mvc-flask-dash'
     SECRET_KEY = os.urandom(32)
-    SQLALCHEMY_DATABASE_URI = URL.create(drivername = 'postgresql',
-                                         username = args.username,
-                                         password = args.password,
-                                         host = args.host,
-                                         port = args.port,
-                                         database = args.database)
+    SQLALCHEMY_DATABASE_URI = URL.create(drivername='postgresql+pg8000',
+                                         username=args.username,
+                                         password=args.password,
+                                         host=args.host,
+                                         port=args.port,
+                                         database=args.database)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
