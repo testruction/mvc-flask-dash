@@ -42,4 +42,4 @@ def init_tracer(args):
 
     trace_integration(connect_module=psycopg2,
                       connect_method_name="connect",
-                      database_system="postgresql")
+                      database_system="mysqlql")

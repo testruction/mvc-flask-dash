@@ -12,23 +12,23 @@ parser.add_argument('--trace-stdout',
 parser.add_argument('--host',
                     type=str,
                     help='Hostname, fully qualified name or IP address',
-                    default=os.environ.get('POSTGRES_HOST', default='localhost'))
+                    default=os.environ.get('MYSQL_HOST', default='localhost'))
 parser.add_argument('--port',
                     type=str,
                     help='Listen port',
-                    default=os.environ.get('POSTGRES_PORT', default=5432))
+                    default=os.environ.get('MYSQL_PORT', default=3306))
 parser.add_argument('--username',
                     type=str,
                     help='Database user login name',
-                    default=os.environ.get('POSTGRES_USER', default=None))
+                    default=os.environ.get('MYSQL_USER', default=None))
 parser.add_argument('--password',
                     type=str,
                     help='Database user login password',
-                    default=os.environ.get('POSTGRES_PASSWORD', default=None))
+                    default=os.environ.get('MYSQL_PASSWORD', default=None))
 parser.add_argument('--database',
                     type=str,
                     help='Name of the database',
-                    default=os.environ.get('POSTGRES_DB', default='fakenames'))
+                    default=os.environ.get('MYSQL_DATABASE', default='fakenames'))
 args, unknown = parser.parse_known_args()
 
 # Initialize logging
@@ -46,12 +46,12 @@ class Config(object):
     CSRF_NABLED = True
     SITE_NAME = 'mvc-flask-dash'
     SECRET_KEY = os.urandom(32)
-    SQLALCHEMY_DATABASE_URI = URL.create(drivername = 'postgresql+psycopg2',
-                                         username = args.username,
-                                         password = args.password,
-                                         host = args.host,
-                                         port = args.port,
-                                         database = args.database)
+    SQLALCHEMY_DATABASE_URI = URL.create(drivername='mysql+pymysql',
+                                         username=args.username,
+                                         password=args.password,
+                                         host=args.host,
+                                         port=args.port,
+                                         database=args.database)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

@@ -5,7 +5,7 @@ import plotly.express as px
 
 from pandas import DataFrame
 
-from app.controllers.postgres import PostgresApis
+from app.controllers.mysql import MySQLApis
 
 layout = html.Div([
     html.Div('Fakenames (Table)'), html.Br(),
@@ -13,7 +13,7 @@ layout = html.Div([
     html.Div(id = 'target')
 ])
 
-def init_postgres_dashboard(flask_server):
+def init_mysql_dashboard(flask_server):
     """Create a Plotly Dash dashboard."""
     dash_app = dash.Dash(server=flask_server,
                          url_base_pathname="/fakenames/",
@@ -21,7 +21,7 @@ def init_postgres_dashboard(flask_server):
                                                "https://fonts.googleapis.com/css?family=Lato"])
    
     # Load DataFrame
-    df = DataFrame.from_dict(PostgresApis.get_all())
+    df = DataFrame.from_dict(MySQLApis.get_all())
 
     # Create Layout
     # fig = px.bar(df, x='cctype', y='' text='cctype', color='State')

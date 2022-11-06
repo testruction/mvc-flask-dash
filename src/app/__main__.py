@@ -7,12 +7,12 @@ from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
 import app.config as config
 from app.database import create_db, get_migrate
-from app.controllers.postgres import postgres_controllers
+from app.controllers.mysql import mysql_controllers
 from app.views.index import index_views
-from app.views.dashboards.postgres import init_postgres_dashboard
+from app.views.dashboards.mysql import init_mysql_dashboard
 # New views must be imported and added to this list
 views = [index_views,
-         postgres_controllers]
+         mysql_controllers]
 
 def add_views(flask_server, views):
     """ register views """
@@ -66,7 +66,7 @@ def create_app():
     # Import views
     with app.app_context():
         add_views(flask_server=app, views=views)
-        init_postgres_dashboard(flask_server=app)
+        init_mysql_dashboard(flask_server=app)
         add_swagger(flask_server=app)
         
         return app

@@ -1,17 +1,17 @@
 version: "3.9"  # optional since v1.27.0
 
 services:
-  postgres:
-    image: docker.io/amd64/postgres:14-alpine
+  mysql:
+    image: docker.io/amd64/mysql:8
     restart: always
-    hostname: postgres
+    hostname: mysql
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      MYSQL_USER: ${MYSQL_USER:-mysql}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mysql}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    command: ["postgres", "-c", "log_statement=all"]
+      - "${MYSQL_PORT:-3306}:3306"
 
   jaeger:
     image: quay.io/jaegertracing/all-in-one:latest
@@ -39,14 +39,15 @@ services:
       # OTLP GRPC
       OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
       OTEL_EXPORTER_OTLP_INSECURE: "true"
-      # Postgres
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      # MySQL
+      MYSQL_HOST: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_USER: ${MYSQL_USER:-mysql}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mysql}
     links:
       - jaeger
-      - postgres
+      - mysql
     volumes:
       - ./src:/app/src
       - ./tests:/app/tests

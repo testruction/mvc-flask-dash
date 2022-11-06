@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 logger.setLevel('DEBUG')
 
-from app.models.postgres import Fakenames
+from app.models.mysql import Fakenames
 
 @pytest.mark.usefixtures("app_ctx")
 def test_read_all(app, db):

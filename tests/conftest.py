@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 logger.setLevel('DEBUG')
 
-from app.models.postgres import Fakenames, Base
+from app.models.mysql import Fakenames, Base
 
 import pkg_resources
 dataset = pkg_resources.resource_filename(__name__,

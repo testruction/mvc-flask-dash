@@ -2,7 +2,7 @@
 
 ## Introduction 
 
-Ce dépôt contient le ressources permettant tester, assembler, et publier et exécuter le démonstrateur d'application Web Postgres & S3.
+Ce dépôt contient le ressources permettant tester, assembler, et publier et exécuter le démonstrateur d'application Web MySQL & S3.
 
 ## Bien débuter
 
@@ -12,14 +12,14 @@ Ce dépôt contient le ressources permettant tester, assembler, et publier et ex
 cp -v ./.env.example ./.env
 ```
 
-### Génération des données Postgres & S3
+### Génération des données MySQL & S3
 
 ```shell
 export AWS_PROFILE='<profile aws cli>'
 source .env
 
 pytest tests/integration/test_s3_a_model.py
-pytest tests/integration/test_postgres_a_model.py
+pytest tests/integration/test_mysql_a_model.py
 ```
 
 ### Environnement Locale
