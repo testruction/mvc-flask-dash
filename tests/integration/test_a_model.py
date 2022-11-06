@@ -9,9 +9,10 @@ logger.setLevel('DEBUG')
 from app.models.postgres import Fakenames
 
 @pytest.mark.usefixtures("app_ctx")
-def test_read_all(app, db):
-    response = db.session.query(Fakenames).all()
-    # logger.info(response)
+def test_read_all(app, db, tables):
+    response = Fakenames.read_all()
+    # response = db.session.query(Fakenames).all()
+    logger.info(response)
     assert len(response) == 1000
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from app.database import db
-
+from sqlalchemy import Column, Integer, String, DateTime, Numeric, SmallInteger
 from sqlalchemy.ext.declarative import declarative_base
 from app.utils import get_openid_user
 
@@ -14,63 +14,62 @@ logger = logging.getLogger(__name__)
 
 
 class Fakenames(Base):
-    
-    __tablename__ = 'fakenames'
-    
-    number = db.Column(db.Integer, primary_key=True, unique=True)
-    gender = db.Column(db.String(6))
-    nameset = db.Column(db.String(25))
-    title = db.Column(db.String(6))
-    givenname = db.Column(db.String(20))
-    middleinitial = db.Column(db.String(1))
-    surname = db.Column(db.String(23))
-    streetaddress = db.Column(db.String(100))
-    city = db.Column(db.String(100))
-    state = db.Column(db.String(22))
-    statefull = db.Column(db.String(100))
-    zipcode = db.Column(db.String(15))
-    country = db.Column(db.String(2))
-    countryfull = db.Column(db.String(100))
-    emailaddress = db.Column(db.String(100))
-    username = db.Column(db.String(25))
-    password = db.Column(db.String(25))
-    browseruseragent = db.Column(db.String(255))
-    telephonenumber = db.Column(db.String(25))
-    telephonecountrycode = db.Column(db.Integer)
-    mothersmaiden = db.Column(db.String(23))
-    birthday = db.Column(db.DateTime)
-    age = db.Column(db.Integer)
-    tropicalzodiac = db.Column(db.String(11))
-    cctype = db.Column(db.String(10))
-    ccnumber = db.Column(db.String(16))
-    cvv2 =  db.Column(db.Integer)
-    ccexpires = db.Column(db.String(10))
-    nationalid = db.Column(db.String(20))
-    ups = db.Column(db.String(24))
-    westernunionmtcn = db.Column(db.String(10))
-    moneygrammtcn = db.Column(db.String(8))
-    color = db.Column(db.String(6))
-    occupation = db.Column(db.String(70))
-    company = db.Column(db.String(70))
-    vehicle = db.Column(db.String(255))
-    domain = db.Column(db.String(70))
-    bloodtype = db.Column(db.String(3))
-    pounds = db.Column(db.Numeric(5,1))
-    kilograms = db.Column(db.Numeric(5,1))
-    feetinches = db.Column(db.String(6))
-    centimeters = db.Column(db.SmallInteger)
-    guid = db.Column(db.String(36))
-    latitude = db.Column(db.Numeric(10,8))
-    longitude = db.Column(db.Numeric(11,8))
 
+    __tablename__ = 'fakenames'
+
+    number = Column(Integer, primary_key=True)
+    gender = Column(String(6))
+    nameset = Column(String(25))
+    title = Column(String(6))
+    givenname = Column(String(20))
+    middleinitial = Column(String(1))
+    surname = Column(String(23))
+    streetaddress = Column(String(100))
+    city = Column(String(100))
+    state = Column(String(22))
+    statefull = Column(String(100))
+    zipcode = Column(String(15))
+    country = Column(String(2))
+    countryfull = Column(String(100))
+    emailaddress = Column(String(100))
+    username = Column(String(25))
+    password = Column(String(25))
+    browseruseragent = Column(String(255))
+    telephonenumber = Column(String(25))
+    telephonecountrycode = Column(Integer)
+    mothersmaiden = Column(String(23))
+    birthday = Column(DateTime)
+    age = Column(Integer)
+    tropicalzodiac = Column(String(11))
+    cctype = Column(String(10))
+    ccnumber = Column(String(16))
+    cvv2 =  Column(Integer)
+    ccexpires = Column(String(10))
+    nationalid = Column(String(20))
+    ups = Column(String(24))
+    westernunionmtcn = Column(String(10))
+    moneygrammtcn = Column(String(8))
+    color = Column(String(6))
+    occupation = Column(String(70))
+    company = Column(String(70))
+    vehicle = Column(String(255))
+    domain = Column(String(70))
+    bloodtype = Column(String(3))
+    pounds = Column(Numeric(5,1))
+    kilograms = Column(Numeric(5,1))
+    feetinches = Column(String(6))
+    centimeters = Column(SmallInteger)
+    guid = Column(String(36))
+    latitude = Column(Numeric(10,8))
+    longitude = Column(Numeric(11,8))
 
     # Explicit SQLAlchemy class constructor
     def __init__(self, **kwargs):
         super(Fakenames, self).__init__(**kwargs)
-   
+
     def __repr__(self):
         return f'<Number {self.number}>, <GUID {self.guid}>'
-    
+
     @property
     def serialize(self):
         return {
@@ -123,16 +122,16 @@ class Fakenames(Base):
 
     def create(self) -> bool:
         """ Creates a database entry """
-        response =  True
-        
+        response = True
+
         try:
             with tracer.start_as_current_span(name='create'):
                 current_span = trace.get_current_span()
                 current_span.set_attributes({'enduser.id': get_openid_user()})
-                
+
                 db.session.add(self)
                 db.session.commit()
-                
+
                 logger.info(f'Creating row "{self.guid}" succeeded!')
                 status = trace.status.Status(trace.StatusCode.OK)
         except Exception:
@@ -143,14 +142,14 @@ class Fakenames(Base):
             response = False
         current_span.set_status(status)
         return False if response == False else True
-            
+
     def read_all() -> list:
         """ Retreive all records from the table """
         try:
             with tracer.start_as_current_span(name='get_all'):
                 current_span = trace.get_current_span()
                 current_span.set_attributes({'enduser.id': get_openid_user()})
-                
+
                 response = db.session.query(Fakenames).all()
                 status = trace.status.Status(trace.StatusCode.OK)
         except Exception:
@@ -167,10 +166,10 @@ class Fakenames(Base):
             with tracer.start_as_current_span(name='get'):
                 current_span = trace.get_current_span()
                 current_span.set_attributes({'enduser.id': get_openid_user()})
-                
+
                 response = db.session.query(Fakenames).filter(Fakenames.guid == guid).limit(1).all()
                 response = response[0]
-                
+
                 status = trace.status.Status(trace.StatusCode.OK)
         except Exception:
             e = traceback.format_exc()
@@ -183,15 +182,15 @@ class Fakenames(Base):
     def udpate(self) -> bool:
         """ Creates a database entry """
         response =  True
-        
+
         try:
             with tracer.start_as_current_span(name='update'):
                 current_span = trace.get_current_span()
                 current_span.set_attributes({'enduser.id': get_openid_user()})
-                
+
                 db.session.merge(self)
                 db.session.commit()
-                
+
                 status = trace.status.Status(trace.StatusCode.OK)
         except Exception:
             e = traceback.format_exc()
@@ -200,19 +199,19 @@ class Fakenames(Base):
             response = False
         current_span.set_status(status)
         return False if response == False else True
-    
+
     def delete(self) -> bool:
         """ Deletes a database entry """
-        response =  True
-        
+        response = True
+
         try:
             with tracer.start_as_current_span(name='delete'):
                 current_span = trace.get_current_span()
                 current_span.set_attributes({'enduser.id': get_openid_user()})
-                
+
                 db.session.delete(self)
                 db.session.commit()
-                
+
                 status = trace.status.Status(trace.StatusCode.OK)
         except Exception:
             e = traceback.format_exc()

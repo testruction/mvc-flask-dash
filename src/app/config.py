@@ -40,18 +40,19 @@ init_tracer(args)
 
 from sqlalchemy.engine import URL
 
+
 class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_NABLED = True
     SITE_NAME = 'mvc-flask-dash'
     SECRET_KEY = os.urandom(32)
-    SQLALCHEMY_DATABASE_URI = URL.create(drivername = 'postgresql+psycopg2',
-                                         username = args.username,
-                                         password = args.password,
-                                         host = args.host,
-                                         port = args.port,
-                                         database = args.database)
+    SQLALCHEMY_DATABASE_URI = URL.create(drivername='postgresql+pg8000',
+                                         username=args.username,
+                                         password=args.password,
+                                         host=args.host,
+                                         port=args.port,
+                                         database=args.database)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
