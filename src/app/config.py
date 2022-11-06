@@ -46,7 +46,7 @@ class Config(object):
     CSRF_NABLED = True
     SITE_NAME = 'mvc-flask-dash'
     SECRET_KEY = os.urandom(32)
-    SQLALCHEMY_DATABASE_URI = URL.create(drivername = 'postgresql',
+    SQLALCHEMY_DATABASE_URI = URL.create(drivername = 'postgresql+psycopg2',
                                          username = args.username,
                                          password = args.password,
                                          host = args.host,
