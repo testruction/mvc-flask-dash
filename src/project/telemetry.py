@@ -10,7 +10,7 @@ from opentelemetry.sdk.extension.aws.trace import AwsXRayIdGenerator
 
 from opentelemetry.instrumentation.botocore import BotocoreInstrumentor
 
-import psycopg2
+import pg8000
 from opentelemetry.instrumentation.dbapi import trace_integration
 from project.utils import get_openid_user
 
@@ -40,6 +40,6 @@ def init_tracer(args):
 
     BotocoreInstrumentor().instrument(request_hook=request_hook)
 
-    trace_integration(connect_module=psycopg2,
+    trace_integration(connect_module=pg8000,
                       connect_method_name="connect",
                       database_system="postgresql")
