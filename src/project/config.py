@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import os, argparse
+import os
+import argparse
+from sqlalchemy.engine import URL
+
+from project.logging import init_logger
+from project.telemetry import init_tracer
+
 # CLI arguments composition
 parser = argparse.ArgumentParser()
 parser.add_argument('--debug',
@@ -32,13 +38,9 @@ parser.add_argument('--database',
 args, unknown = parser.parse_known_args()
 
 # Initialize logging
-from project.logging import init_logger
 init_logger(args)
 # Initialize telemetry
-from project.telemetry import init_tracer
 init_tracer(args)
-
-from sqlalchemy.engine import URL
 
 
 class Config(object):

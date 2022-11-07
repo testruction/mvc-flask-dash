@@ -21,7 +21,7 @@ def init_tracer(args):
     """
     resource = Resource.create(attributes={"service.namespace": "io.testruction",
                                            "service.name": "mvc-flask-dash"})
-    
+
     trace.set_tracer_provider(TracerProvider(id_generator=AwsXRayIdGenerator(),
                                              resource=resource))
 
@@ -32,8 +32,8 @@ def init_tracer(args):
     if args.trace_stdout:
         trace.get_tracer_provider().add_span_processor(
             SimpleSpanProcessor(ConsoleSpanExporter()))
-    
-    #set open telemetry for botocore
+
+    # set open telemetry for botocore
     def request_hook(span: trace.get_current_span(), service_name, operation_name, api_params):
         if span and span.is_recording():
             span.set_attribute("enduser.id", get_openid_user())
