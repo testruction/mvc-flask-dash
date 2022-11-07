@@ -61,12 +61,14 @@ def app_ctx(app: Flask) -> t.Generator[AppContext, None, None]:
 
 @pytest.fixture
 def db(app: Flask) -> SQLAlchemy:
-    return SQLAlchemy(app, model_class=Fakenames)
+    db = SQLAlchemy(app, model_class=Fakenames)
+    db.init_app(app)
+    return db
 
 
 @pytest.fixture
 @pytest.mark.usefixtures("app_ctx")
-def tables(app: Flask, db: SQLAlchemy) -> t.Any:    
+def tables(app: Flask, db: SQLAlchemy) -> t.Any:
     Base.metadata.bind = db.engine.connect()
     Base.metadata.create_all(db.engine)
     # db.create_all()
@@ -79,12 +81,13 @@ def tables(app: Flask, db: SQLAlchemy) -> t.Any:
     from contextlib import closing
     with closing(open(dataset, encoding='utf-8-sig')) as f:
         reader = csv.DictReader(lower_first(f))
-        
+
         for row in reader:
             db.session.add(Fakenames(**row))
         db.session.commit()
 
     yield Fakenames
 
+    db.session.close()
     Base.metadata.drop_all()
     # db.drop_all()
