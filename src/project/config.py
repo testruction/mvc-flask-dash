@@ -56,7 +56,7 @@ class Config(object):
                                          port=args.port,
                                          database=args.database)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    JSON_SORT_KEYS = False
 
 class ProductionConfig(Config):
     DEBUG = False
