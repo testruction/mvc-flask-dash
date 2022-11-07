@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
+import logging
+logger = logging.getLogger(__name__)
+
 import dash
 from dash import dash_table, dcc, html
 import plotly.express as px
 
 from pandas import DataFrame
+import json
+
 
 from project.controllers.postgres import PostgresApis
 
@@ -19,9 +24,11 @@ def init_postgres_dashboard(flask_server):
                          url_base_pathname="/fakenames/",
                          external_stylesheets=["/static/css/styles.css",
                                                "https://fonts.googleapis.com/css?family=Lato"])
-   
+
     # Load DataFrame
-    df = DataFrame.from_dict(PostgresApis.get_all())
+    c = PostgresApis.get_all()
+    d = json.loads(c.data)
+    df = DataFrame.from_dict(d)
 
     # Create Layout
     # fig = px.bar(df, x='cctype', y='' text='cctype', color='State')

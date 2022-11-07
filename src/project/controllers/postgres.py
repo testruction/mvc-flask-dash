@@ -29,7 +29,7 @@ class PostgresApis(Resource):
         for item in Fakenames.read_all():
             response.append(item.serialize)
         logger.debug(f'Response: {response}')
-        return response
+        return jsonify(response)
     
     @staticmethod
     @swag_from(pkg_resources.resource_filename(__name__, 'swagger/identity/GET.yaml'))
@@ -38,7 +38,7 @@ class PostgresApis(Resource):
         """ Returns a fake identity based on its GUID """
         response = Fakenames.read(guid=guid)
         logger.debug(f'Response: {response}')
-        return response.serialize
+        return jsonify(response.serialize)
 
     @postgres_controllers.route('/postgres')
     def dashboard():
