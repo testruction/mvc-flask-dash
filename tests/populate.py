@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 sys.path.append('.')
 sys.path.append('./src/')
@@ -11,7 +12,7 @@ from contextlib import closing
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from project.config import DevelopmentConfig
+from project.config import ProductionConfig
 from project.models.postgres import Fakenames, Base
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ logger.setLevel('DEBUG')
 dataset = pkg_resources.resource_filename(__name__,
                                           'integration/fakenames.csv')
 
-engine = create_engine(url=DevelopmentConfig.SQLALCHEMY_DATABASE_URI,
+engine = create_engine(url=ProductionConfig.SQLALCHEMY_DATABASE_URI,
                        echo=False,
                        future=True)
 connection = engine.connect()
