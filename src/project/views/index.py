@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import pkg_resources, pathlib
+import pkg_resources
+import pathlib
 from flask import Blueprint, render_template
 
 TEMPLATE = pkg_resources.resource_filename(__name__, 'templates/index.html.j2')

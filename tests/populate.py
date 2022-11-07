@@ -11,8 +11,8 @@ from contextlib import closing
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.config import DevelopmentConfig
-from app.models.postgres import Fakenames, Base
+from project.config import DevelopmentConfig
+from project.models.postgres import Fakenames, Base
 
 logger = logging.getLogger(__name__)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)

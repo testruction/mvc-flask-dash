@@ -5,19 +5,21 @@ from flask_assets import Environment
 
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
-import app.config as config
-from app.database import create_db, get_migrate
-from app.controllers.postgres import postgres_controllers
-from app.views.index import index_views
-from app.views.dashboards.postgres import init_postgres_dashboard
+import project.config as config
+from project.database import create_db, get_migrate
+from project.controllers.postgres import postgres_controllers
+from project.views.index import index_views
+from project.views.dashboards.postgres import init_postgres_dashboard
 # New views must be imported and added to this list
 views = [index_views,
          postgres_controllers]
+
 
 def add_views(flask_server, views):
     """ register views """
     for view in views:
         flask_server.register_blueprint(view)
+
 
 def add_swagger(flask_server):
     flask_server.config["SWAGGER"] = {
@@ -46,11 +48,11 @@ def create_app():
                 static_folder='static',
                 instance_relative_config=False)
     app.config.from_object(config.ProductionConfig)
-    
-    
+
     # Enable flask telemetry
     from opentelemetry import trace
-    from app.utils import get_openid_user
+    from project.utils import get_openid_user
+
     def request_hook(span: trace.get_current_span(), environ: app.wsgi_app):
         if span and span.is_recording():
             span.set_attribute("enduser.id", get_openid_user())
@@ -62,13 +64,13 @@ def create_app():
     assets = Environment()
     assets.init_app(app)
     create_db(app)
-    
+
     # Import views
     with app.app_context():
         add_views(flask_server=app, views=views)
         init_postgres_dashboard(flask_server=app)
         add_swagger(flask_server=app)
-        
+
         return app
 
 

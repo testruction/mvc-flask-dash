@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
+import logging
 import dash
 from dash import dash_table, dcc, html
-import plotly.express as px
 
+import json
 from pandas import DataFrame
 
-from app.controllers.postgres import PostgresApis
+from project.controllers.postgres import PostgresApis
+
+logger = logging.getLogger(__name__)
+
 
 layout = html.Div([
     html.Div('Fakenames (Table)'), html.Br(),
-    dcc.Input(id = 'input_text'), html.Br(), html.Br(),
-    html.Div(id = 'target')
+    dcc.Input(id='input_text'), html.Br(), html.Br(),
+    html.Div(id='target')
 ])
+
 
 def init_postgres_dashboard(flask_server):
     """Create a Plotly Dash dashboard."""
@@ -19,9 +24,11 @@ def init_postgres_dashboard(flask_server):
                          url_base_pathname="/fakenames/",
                          external_stylesheets=["/static/css/styles.css",
                                                "https://fonts.googleapis.com/css?family=Lato"])
-   
+
     # Load DataFrame
-    df = DataFrame.from_dict(PostgresApis.get_all())
+    c = PostgresApis.get_all()
+    d = json.loads(c.data)
+    df = DataFrame.from_dict(d)
 
     # Create Layout
     # fig = px.bar(df, x='cctype', y='' text='cctype', color='State')
@@ -63,5 +70,5 @@ def create_data_table(df):
         sort_mode="native",
         page_size=300,
     )
-    
+
     return table
