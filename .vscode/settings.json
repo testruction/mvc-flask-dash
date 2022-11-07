@@ -1,4 +1,16 @@
 {
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 55432,
+            "driver": "PostgreSQL",
+            "name": "mvc-flask-dash",
+            "database": "rdb",
+            "username": "Us3rN4m3",
+            "password": "V3ry1ns3cur3P4ssw0rd"
+        }
+    ]
 }
