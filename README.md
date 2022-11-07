@@ -2,45 +2,30 @@
 
 ## Introduction 
 
-Ce dépôt contient le ressources permettant tester, assembler, et publier et exécuter le démonstrateur d'application Web Postgres & S3.
+This repository provides resources allowing to test, build, and publish a Python Flask based Web application relying on the MVC model.
 
-## Bien débuter
+## Getting started
 
-### Création du fichier .env
+The `.env` file contains the required the component adressing and associated credentials.
+Run the following command to copy from the example file provided in this repository.
 
 ```shell
 cp -v ./.env.example ./.env
 ```
 
-### Génération des données Postgres & S3
+Run the Docker stack
 
 ```shell
-export AWS_PROFILE='<profile aws cli>'
-source .env
-
-pytest tests/integration/test_s3_a_model.py
-pytest tests/integration/test_postgres_a_model.py
+docker-compose up -d --build
 ```
 
-### Environnement Locale
+Access the Web application at <http://localhost:55000>.
+
+
+## Testing
+
+Application components can be tested individually using pytest.
 
 ```shell
-export AWS_PROFILE='<profile aws cli>'
-
-local/run_image.sh
-```
-
-### Livraison ECR
-
-```shell
-export AWS_PROFILE='<profile aws cli>'
-
-local/release_to_ecr.sh
-```
-
-### Suppression ECR
-
-```shell
-source .env
-MSYS_NO_PATHCONV=1 aws cloudformation delete-stack --stack-name "${CNF_ECR_STACK_NAME}"
+pytest tests/integration/test_a_model.py
 ```
